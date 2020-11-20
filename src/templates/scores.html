@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<h1>Scores !</h1>
+
+<form action="/add_score" method="POST">
+    <input type="text" name="pseudo"></input>
+    <input type="text" name="score"></input>
+    <input type="submit"></input>
+</form>
+
+{% for item in items%}
+    <h1>{{ item.pseudo }}</h1>
+    <p>{{ item.score }}</p>
+{% endfor %}

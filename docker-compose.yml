@@ -1,5 +1,19 @@
-version: '3'
+version: '3.8'
 
 services:
-  product-service:
-    build: .
+  web:
+    build : ./src
+    command: python -u app.py
+    volumes : 
+      - ./src:/src
+    ports :
+      - 5002:80
+    depends_on:
+      - mongodb
+      - redisdb
+
+  mongodb:
+    image: mongo
+  
+  redisdb:
+    image: redis
