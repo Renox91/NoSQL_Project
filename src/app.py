@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 client = MongoClient('mongodb',27017)
 db = client.userdb
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 @app.route('/')
 def index():
@@ -42,15 +43,9 @@ def register():
         return 'That username already exists!'
 
     return render_template('register.html')
-
-@app.route('/redis')
-def redis():
-    r = redis.Redis(host='localhost', port=6379, db=0)
-    r.set('foo', 'bar')
-    r.get('foo')
-
-@app.route('/mongo')
-def mongo():
+    
+@app.route('/scores')
+def scores():
     db_items = db.userdb.find()
     items = [item for item in db_items]
 
@@ -58,12 +53,7 @@ def mongo():
 
 @app.route('/add_score', methods = ['POST'])
 def add_score():
-    item_doc = {
-        'pseudo': request.form['pseudo'],
-        'score': request.form['score']
-    }
-    db.userdb.insert_one(item_doc)
-    return redirect(url_for('mongo'))
+    r.set(session['username'], request.form['score'])
 
 @app.route('/casse_brique', methods =['GET'])
 def casse_brique():

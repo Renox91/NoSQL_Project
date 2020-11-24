@@ -1,4 +1,5 @@
 flask
+flask-bootstrap
 redis
 pymongo
 bcrypt
