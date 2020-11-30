@@ -1,4 +1,4 @@
-FROM python:3-onbuild
-WORKDIR /app
-COPY . /app
+FROM python:3
+WORKDIR /usr/src/app
+COPY . .
 RUN pip install -r requirements.txt

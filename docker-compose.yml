@@ -5,15 +5,44 @@ services:
     build : ./src
     command: python -u app.py
     volumes : 
-      - ./src:/src
+      - ./src:/usr/src/app
     ports :
       - 5002:80
+    restart: unless-stopped
     depends_on:
       - mongodb
-      - redisdb
+      - redis
+
+  postgres:
+    image: postgres
+    build:
+      context: src/data
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   mongodb:
     image: mongo
+    volumes:
+      - mongodb-data:/data/db
+    hostname: 'mongodb'
   
-  redisdb:
+  redis:
     image: redis
+    volumes:
+      - redis-data:/data
+
+    
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  mongodb-data:
+    driver: local

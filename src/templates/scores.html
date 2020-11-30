@@ -1,14 +1,27 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<h1>Scores !</h1>
+{% block title %} Scores Casse_brique {% endblock %}
 
-<form action="/add_score" method="POST">
-    <input type="text" name="pseudo"></input>
-    <input type="text" name="score"></input>
-    <input type="submit"></input>
-</form>
+{% block content %}
+    <h1>Scores !</h1>
 
-{% for item in items%}
-    <h1>{{ item.pseudo }}</h1>
-    <p>{{ item.score }}</p>
-{% endfor %}
+    <form action="/add_score" method="POST">
+        <input type="text" name="pseudo"></input>
+        <input type="text" name="score"></input>
+        <input type="submit"></input>
+    </form> 
+
+    <div class="container">
+        <div class="row">
+    {% for i in range(index) %}
+                <div class="col">
+                    <div class="jumbotron">
+                        <h1 class="display-5">Pseudo : {{ data_keys[i] }}</h1>
+                        <p class="lead">Scores {{ data_values[i] }}</p>
+                        </p>
+                    </div>
+                </div>
+    {% endfor %}
+        </div>
+    </div>
+{% endblock%}

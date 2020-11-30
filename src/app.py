@@ -1,18 +1,40 @@
-from flask import Flask, session, render_template, request, redirect, url_for 
-import redis
-from pymongo import MongoClient
-import bcrypt
+# Imports flask
+from flask import Flask, session, render_template, request, redirect, url_for
+from flask.helpers import flash 
 
+# Imports database
+import redis
+import psycopg2
+from pymongo import MongoClient
+
+# Others imports
+import bcrypt
+from datetime import date, timedelta
+import sys
+
+# App
 app = Flask(__name__)
 
+# MongoDB
 client = MongoClient('mongodb',27017)
 db = client.userdb
-r = redis.Redis(host='localhost', port=6379, db=0)
+
+# Redis
+redisdb = redis.Redis(host = 'redis', port = 6379)
+
+#Postgres
+postgresdb = psycopg2.connect(
+  host="postgres",
+  user="test",
+  password="test",
+  database="test"
+)
+
 
 @app.route('/')
 def index():
     if 'username' in session:
-        return 'You are logged in as ' + session['username']
+        return render_template('home.html')
 
     return render_template('index.html')
 
@@ -20,13 +42,23 @@ def index():
 def login():
     users = db.userdb
     login_user = users.find_one({'username': request.form['username']})
-
+    
     if login_user:
         if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
+            if request.form.get('remember'):
+                session.permanent = True
+            else:
+                session.permanent = False
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
-    return 'Mauvais username/password'
+    flash("Bad Username or Password", "warning")
+    return redirect(url_for('index'))
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 @app.route('/register', methods=["POST", "GET"])
 def register():
@@ -40,25 +72,55 @@ def register():
             session['username'] = request.form['username']
             return redirect(url_for('index'))
         
-        return 'That username already exists!'
+        flash("That username already exists!")
+        return redirect(url_for('register'))
 
     return render_template('register.html')
     
 @app.route('/scores')
 def scores():
-    db_items = db.userdb.find()
-    items = [item for item in db_items]
+    if 'username' in session:
+        # db_items = db.userdb.find()
+        # items = [item for item in db_items]
+        # return render_template('scores.html', items = items)
 
-    return render_template('scores.html', items = items)
+        cursordb = postgresdb.cursor()
+        cursordb.execute("Select * from scores")
+        keys = cursordb.fetchall()
+        data_keys = []
+        data_values = []
+        # keys = redisdb.keys('*')
+        for key in keys:
+            data_keys.append(key[2])
+            data_values.append(key[4])
 
+        return render_template('scores.html', data_keys = data_keys, data_values = data_values, index = len(keys))
+    return redirect(url_for('index'))
+    
 @app.route('/add_score', methods = ['POST'])
 def add_score():
-    r.set(session['username'], request.form['score'])
+    cursordb = postgresdb.cursor()
+    cursordb.execute("""INSERT INTO scores(
+	game, username, score, date_score)
+	VALUES (%s, %s, %s, %s)""",(request.form['game'],session['username'],request.form['score'],date.today()))
+    postgresdb.commit()
+
+    # redisdb.set(session['username'], request.form['score'])
+    return redirect(url_for('scores'))
 
 @app.route('/casse_brique', methods =['GET'])
 def casse_brique():
-    return render_template('casse_brique.html')
+    if 'username' in session:
+        return render_template('casse_brique.html')
+
+    return redirect(url_for('index'))
+
+@app.route('/redisdbs')
+def redisdbs():
+    redisdb.incr('hits')
+    return f"index: {redisdb.get('hits')}"
 
 if __name__ == '__main__':
-    app.secret_key = 'mysecret'
+    app.secret_key = '65416546zzefuihs45684d6zf'
+    app.permanent_session_lifetime = timedelta(days = 5)
     app.run(host='0.0.0.0', port=80, debug=True)

@@ -3,3 +3,4 @@ flask-bootstrap
 redis
 pymongo
 bcrypt
+psycopg2

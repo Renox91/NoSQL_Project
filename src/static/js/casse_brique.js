@@ -164,4 +164,26 @@ function draw() {
   y += dy;
 }
 
+function add_score() {
+  //Création dynamique du formulaire
+  var form = document.createElement('form');
+  form.setAttribute('method', 'post');
+  form.setAttribute('action', 'add_score');
+
+  var champCache = document.createElement('input');
+  champCache.setAttribute('type', 'hidden');
+  champCache.setAttribute('name', 'score');
+  champCache.setAttribute('value', score);
+
+  var game = document.createElement('input');
+  game.setAttribute('type', 'hidden');
+  game.setAttribute('name', 'game');
+  game.setAttribute('value', 'casse-brique');
+  
+  form.appendChild(champCache);
+  form.appendChild(game);
+  //Ajout du formulaire à la page et soumission du formulaire
+  form.submit();
+  }
+
 var interval = setInterval(draw, 10);
