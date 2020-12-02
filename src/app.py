@@ -24,7 +24,7 @@ redisdb = redis.Redis(host = 'redis', port = 6379)
 
 #Postgres
 postgresdb = psycopg2.connect(
-  host="postgres",
+  host="postgre",
   user="test",
   password="test",
   database="test"
