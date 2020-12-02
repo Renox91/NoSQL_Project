@@ -30,11 +30,27 @@ postgresdb = psycopg2.connect(
   database="test"
 )
 
-
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('home.html')
+        redisdb.incr('hits')
+        redisdb.incr(session['username'])
+
+        keys = redisdb.keys('*')
+        lastUserVisit = 0
+        lastUsername = None
+
+        for key in keys:
+            
+            if int(redisdb.get(key)) > lastUserVisit and not key.decode("utf-8") == 'hits':
+                print(key, file=sys.stderr)
+                lastUsername = key.decode("utf-8") 
+
+
+        return render_template('home.html',
+        visiteurs = int(redisdb.get('hits')), 
+        visiteLocal = int(redisdb.get(session['username'])),
+        highestVisiteur = lastUsername)
 
     return render_template('index.html')
 
@@ -80,19 +96,9 @@ def register():
 @app.route('/scores')
 def scores():
     if 'username' in session:
-        # db_items = db.userdb.find()
-        # items = [item for item in db_items]
-        # return render_template('scores.html', items = items)
-
         cursordb = postgresdb.cursor()
         cursordb.execute("Select * from scores")
         keys = cursordb.fetchall()
-        # data_keys = []
-        # data_values = []
-        # # keys = redisdb.keys('*')
-        # for key in keys:
-        #     data_keys.append(key[2])
-        #     data_values.append(key[3])
 
         return render_template('scores.html', data = keys)
     return redirect(url_for('index'))
@@ -104,8 +110,6 @@ def add_score():
 	game, username, score, date_score)
 	VALUES (%s, %s, %s, %s)""",(request.form['game'],session['username'],request.form['score'],date.today()))
     postgresdb.commit()
-
-    # redisdb.set(session['username'], request.form['score'])
     return redirect(url_for('scores'))
 
 @app.route('/casse_brique', methods =['GET'])
@@ -121,11 +125,6 @@ def pong():
         return render_template('pong.html')
 
     return redirect(url_for('index'))
-
-@app.route('/redisdbs')
-def redisdbs():
-    redisdb.incr('hits')
-    return f"index: {redisdb.get('hits')}"
 
 @app.route('/stats')
 def stats():
