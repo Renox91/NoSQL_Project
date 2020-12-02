@@ -21,19 +21,5 @@ Ce projet utilise le langage Python3 avec le framework Flask.
 
 ## Persistances des volumes
 
-Connecting to the **postgresql** database :
-```bash
-docker exec -it db bash
-root@05b3a3471f6f:/#  psql -U postgres
-```
-Connecting to the **redis** database :
-```bash
-docker exec -it redis redis-cli
-```
-
-Connecting to the **MongoDB** database :
-```bash
-docker exec -it mongodb mongo
-```
 
 
