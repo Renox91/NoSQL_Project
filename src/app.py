@@ -41,10 +41,10 @@ def index():
         lastUsername = None
 
         for key in keys:
-            
             if int(redisdb.get(key)) > lastUserVisit and not key.decode("utf-8") == 'hits':
-                print(key, file=sys.stderr)
+                print(key,redisdb.get(key), file=sys.stderr)
                 lastUsername = key.decode("utf-8") 
+                lastUserVisit = int(redisdb.get(key))
 
 
         return render_template('home.html',

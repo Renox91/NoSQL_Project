@@ -34,13 +34,14 @@ Pour se connecter aux différentes base de données :
 
 ### mongodb
 ```bash
-docker exec -it mongodb mongo 
+docker exec -it mongo mongo 
 ```
 
 ### postgresql
 ```bash
 docker exec -it postgre bash
-psql -U postgre
+psql test test
+SELECT * FROM scores;
 ```
 
 ### redis
