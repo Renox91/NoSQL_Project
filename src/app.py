@@ -115,10 +115,27 @@ def casse_brique():
 
     return redirect(url_for('index'))
 
+@app.route('/pong', methods =['GET'])
+def pong():
+    if 'username' in session:
+        return render_template('pong.html')
+
+    return redirect(url_for('index'))
+
 @app.route('/redisdbs')
 def redisdbs():
     redisdb.incr('hits')
     return f"index: {redisdb.get('hits')}"
+
+@app.route('/stats')
+def stats():
+    if 'username' in session:
+        cursordb = postgresdb.cursor()
+        cursordb.execute(f"select * from scores where username = '{session['username']}'")
+        data = cursordb.fetchall()
+        return render_template('stats.html',data = data)
+
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.secret_key = '65416546zzefuihs45684d6zf'

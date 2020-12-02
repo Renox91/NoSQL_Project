@@ -178,7 +178,7 @@ function add_score() {
   var game = document.createElement('input');
   game.type = 'HIDDEN';
   game.name = 'game';
-  game.value = 'casse-briques'
+  game.value = 'Casse-briques'
   
   form.appendChild(scoreInput);
   form.appendChild(game);

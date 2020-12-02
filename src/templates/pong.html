@@ -5,7 +5,7 @@
 {% block head %}
     <style>
         * { padding: 0; margin: 0; }
-        canvas { background: #eee; display: block; margin: 0 auto; }
+        canvas { background: rgb(0, 0, 0); display: block; margin: 0 auto; }
     </style>
 {% endblock %}
 
@@ -19,11 +19,11 @@
                 <button onclick="add_score()" class="btn btn-primary btn-block">Submit Score</button>
             </div>
             <div class="col-md-2 col-md-offset-2">
-                <a href="casse_brique" class="btn btn-primary btn-block">Rejouer</a>
+                <a href="pong" class="btn btn-primary btn-block">Rejouer</a>
             </div>
         </div>
     </div>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/casse_brique.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/pong.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock%}
