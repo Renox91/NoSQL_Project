@@ -3,7 +3,7 @@
 ## Lancement du projet
 
 ```bash
-git clone https://github.com/SamirPS/DockerProject.git
+git clone https://github.com/Renox91/NoSQL_Project
 cd NoSQL_Project
 docker-compose up --build
 ```
