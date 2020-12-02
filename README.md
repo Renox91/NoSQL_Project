@@ -18,14 +18,15 @@ Ce projet utilise le langage Python3 avec le framework Flask.
 
 - **postgresql** : Sert à stocker les scores des différents utilisateurs sur les différents jeux
 
+```sql
 id serial NOT NULL,
 game text NOT NULL,
 username text NOT NULL,
 score integer NOT NULL,
-date_score date NOT NULL,
+date_score date NOT NULL
+```
 
 - **redis** : Simple usage pour savoir le nombre de fois que le site à été visité 
-
 
 ## Persistances des volumes
 
