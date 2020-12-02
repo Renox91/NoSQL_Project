@@ -14,7 +14,6 @@ services:
       - redis
 
   postgres:
-    image: postgres
     build:
       context: src/data
       dockerfile: Dockerfile

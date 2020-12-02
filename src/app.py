@@ -87,14 +87,14 @@ def scores():
         cursordb = postgresdb.cursor()
         cursordb.execute("Select * from scores")
         keys = cursordb.fetchall()
-        data_keys = []
-        data_values = []
-        # keys = redisdb.keys('*')
-        for key in keys:
-            data_keys.append(key[2])
-            data_values.append(key[4])
+        # data_keys = []
+        # data_values = []
+        # # keys = redisdb.keys('*')
+        # for key in keys:
+        #     data_keys.append(key[2])
+        #     data_values.append(key[3])
 
-        return render_template('scores.html', data_keys = data_keys, data_values = data_values, index = len(keys))
+        return render_template('scores.html', data = keys)
     return redirect(url_for('index'))
     
 @app.route('/add_score', methods = ['POST'])

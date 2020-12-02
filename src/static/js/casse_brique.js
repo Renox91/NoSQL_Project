@@ -167,23 +167,25 @@ function draw() {
 function add_score() {
   //Création dynamique du formulaire
   var form = document.createElement('form');
-  form.setAttribute('method', 'post');
-  form.setAttribute('action', 'add_score');
+  form.method = 'POST';
+  form.action = 'add_score';
 
-  var champCache = document.createElement('input');
-  champCache.setAttribute('type', 'hidden');
-  champCache.setAttribute('name', 'score');
-  champCache.setAttribute('value', score);
+  var scoreInput = document.createElement('input');
+  scoreInput.type = 'HIDDEN';
+  scoreInput.name = 'score';
+  scoreInput.value = score;
 
   var game = document.createElement('input');
-  game.setAttribute('type', 'hidden');
-  game.setAttribute('name', 'game');
-  game.setAttribute('value', 'casse-brique');
+  game.type = 'HIDDEN';
+  game.name = 'game';
+  game.value = 'casse-briques'
   
-  form.appendChild(champCache);
+  form.appendChild(scoreInput);
   form.appendChild(game);
   //Ajout du formulaire à la page et soumission du formulaire
+  document.body.appendChild(form);
+
   form.submit();
-  }
+}
 
 var interval = setInterval(draw, 10);
