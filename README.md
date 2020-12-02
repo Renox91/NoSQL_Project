@@ -30,5 +30,20 @@ date_score date NOT NULL
 
 ## Persistances des volumes
 
+Pour se connecter aux différentes base de données :
 
+### mongodb
+```bash
+docker exec -it mongodb mongo 
+```
 
+### postgresql
+```bash
+docker exec -it postgre bash
+psql -U postgre
+```
+
+### redis
+```bash
+docker exec -it redis redis-cli
+```
